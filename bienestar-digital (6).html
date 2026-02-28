@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bienestar Digital – Recursos Gratuitos de Salud para la Comunidad Latina</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #F5A623;
+    --gold-dark: #D4891A;
+    --bg: #0d0d0f;
+    --surface: #141418;
+    --surface2: #1c1c22;
+    --text: #f0eee8;
+    --muted: #888;
+    --red-tag: #8B1C1C;
+    --green: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1551076805-e1869033e561?w=1600&q=80') center/cover no-repeat;
+    filter: brightness(0.18) saturate(0.5);
+    z-index: 0;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(245,166,35,.06) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(245,166,35,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+  }
+
+  .hero > * { position: relative; z-index: 2; }
+
+  .hero-badge {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: .75rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+    animation: fadeUp .8s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    line-height: .92;
+    letter-spacing: .02em;
+    color: #fff;
+    animation: fadeUp .8s .1s ease both;
+  }
+
+  .hero h1 span { color: var(--gold); }
+
+  .hero-sub {
+    margin: 20px 0 40px;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: #b0ada4;
+    max-width: 520px;
+    line-height: 1.6;
+    animation: fadeUp .8s .2s ease both;
+  }
+
+  .btn-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: #00ffcc;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 13px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 2px solid #00ffcc;
+    cursor: pointer;
+    margin-top: 14px;
+    letter-spacing: .08em;
+    animation: fadeUp .8s .4s ease both;
+    position: relative;
+    overflow: hidden;
+    transition: color .3s, background .3s, box-shadow .3s;
+    box-shadow: 0 0 18px rgba(0,255,204,.3), inset 0 0 18px rgba(0,255,204,.05);
+    text-shadow: 0 0 12px rgba(0,255,204,.8);
+  }
+  .btn-premium::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,204,.15), rgba(0,200,255,.08));
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .btn-premium:hover {
+    color: #000;
+    background: #00ffcc;
+    box-shadow: 0 0 36px rgba(0,255,204,.7), 0 0 80px rgba(0,255,204,.25);
+    text-shadow: none;
+  }
+  .btn-premium:hover::before { opacity: 1; }
+
+  @keyframes neonPulse {
+    0%,100% { box-shadow: 0 0 18px rgba(0,255,204,.3), inset 0 0 18px rgba(0,255,204,.05); }
+    50%      { box-shadow: 0 0 32px rgba(0,255,204,.6), inset 0 0 24px rgba(0,255,204,.1); }
+  }
+  .btn-premium { animation: fadeUp .8s .4s ease both, neonPulse 2.5s ease infinite; }
+
+  /* CONSTRUCTION MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,.85);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    position: relative;
+    background: #0d0f14;
+    border: 1px solid rgba(0,255,204,.25);
+    border-radius: 24px;
+    max-width: 580px;
+    width: 100%;
+    text-align: center;
+    padding: 56px 36px 48px;
+    box-shadow: 0 0 80px rgba(0,255,204,.15);
+    overflow: hidden;
+  }
+  .modal-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00ffcc, #00c8ff, #00ffcc, transparent);
+    animation: scanLine 3s linear infinite;
+  }
+  @keyframes scanLine { 0%{background-position:0%} 100%{background-position:200%} }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; color: #555; font-size: 1.4rem;
+    cursor: pointer; transition: color .2s;
+  }
+  .modal-close:hover { color: #00ffcc; }
+
+  .modal-icon { font-size: 4rem; margin-bottom: 16px; display: block; animation: spin 8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal-tag {
+    display: inline-block;
+    background: rgba(0,255,204,.1);
+    border: 1px solid rgba(0,255,204,.3);
+    color: #00ffcc;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  .modal-h { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: #fff; line-height: 1; margin-bottom: 14px; }
+  .modal-h span { color: #00ffcc; text-shadow: 0 0 20px rgba(0,255,204,.7); }
+
+  .modal-p { color: #888; font-size: .95rem; line-height: 1.75; margin-bottom: 28px; max-width: 420px; margin-left: auto; margin-right: auto; }
+  .modal-p strong { color: #d0cdc6; }
+
+  .modal-features {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 32px; text-align: left;
+    background: rgba(255,255,255,.02);
+    border: 1px solid rgba(255,255,255,.05);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .modal-features li {
+    list-style: none;
+    display: flex; align-items: center; gap: 10px;
+    font-size: .88rem; color: #aaa;
+  }
+  .modal-features li .dot {
+    width: 8px; height: 8px; min-width: 8px;
+    border-radius: 50%;
+    background: #00ffcc;
+    box-shadow: 0 0 8px #00ffcc;
+  }
+
+  .modal-coming {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .8rem; color: #555; margin-top: 16px;
+  }
+  .modal-coming span { color: #00ffcc; font-weight: 800; }
+
+  .progress-bar {
+    background: rgba(255,255,255,.05);
+    border-radius: 999px;
+    height: 6px;
+    margin: 24px 0 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 35%;
+    background: linear-gradient(90deg, #00ffcc, #00c8ff);
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(0,255,204,.5);
+    animation: loadBar 3s ease infinite alternate;
+  }
+  @keyframes loadBar { from{width:28%} to{width:42%} }
+  .progress-label { font-size: .72rem; color: #444; text-align: left; }
+    align-items: center;
+    gap: 10px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .2s, transform .2s;
+    animation: fadeUp .8s .3s ease both;
+    border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp .8s .4s ease both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--gold); }
+  .stat-label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+
+  /* ── SECTION ── */
+  .section { padding: 80px 24px; max-width: 1200px; margin: 0 auto; }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: .05em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .section-sub { color: var(--muted); margin-bottom: 48px; font-size: 1.05rem; }
+
+  /* ── PHOTO GRID ── */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .photo-card {
+    position: relative;
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+
+  .photo-card:hover img,
+  .photo-card:active img {
+    transform: scale(1.07);
+  }
+
+  .photo-card .card-tag {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: var(--red-tag);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .photo-card .card-free {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: #2ecc71;
+    color: #000;
+    font-size: .68rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* dark gradient at bottom */
+  .photo-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.3) 45%, transparent 100%);
+    z-index: 1;
+    transition: opacity .3s;
+  }
+
+  .photo-card-name {
+    position: absolute;
+    bottom: 14px; left: 12px; right: 12px;
+    color: #fff;
+    font-weight: 800;
+    font-size: .88rem;
+    line-height: 1.3;
+    z-index: 3;
+    text-shadow: 0 1px 8px rgba(0,0,0,.8);
+  }
+
+  @media (max-width: 720px) {
+    .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .photo-card { aspect-ratio: 3/4; }
+  }
+
+  @media (max-width: 400px) {
+    .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  }
+
+  /* ── GUIDE CARDS (kept for reference, unused) ── */
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+  }
+
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid rgba(245,166,35,.12);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .guide-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold);
+    box-shadow: 0 16px 48px rgba(245,166,35,.18);
+  }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s;
+  }
+  .guide-card:hover .card-img { transform: scale(1.04); }
+
+  .card-img-wrap { overflow: hidden; position: relative; }
+
+  .card-tag {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: var(--red-tag);
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .card-free {
+    position: absolute;
+    bottom: 12px; right: 12px;
+    background: var(--green);
+    color: #000;
+    font-size: .75rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .card-body { padding: 20px 20px 24px; }
+  .card-body h3 { font-size: 1.1rem; font-weight: 800; line-height: 1.35; margin-bottom: 10px; }
+  .card-body p { font-size: .88rem; color: #9a9690; line-height: 1.6; margin-bottom: 16px; }
+
+  .card-features { list-style: none; margin-bottom: 18px; }
+  .card-features li {
+    font-size: .82rem;
+    color: #b0ada4;
+    padding: 3px 0;
+    padding-left: 18px;
+    position: relative;
+  }
+  .card-features li::before {
+    content: '✓';
+    position: absolute; left: 0;
+    color: var(--gold);
+    font-weight: 800;
+  }
+
+  .card-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 800;
+    font-size: .92rem;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background .2s;
+    width: 100%;
+  }
+  .guide-card:hover .card-cta { background: var(--gold-dark); }
+
+  /* ── DETAIL SECTIONS ── */
+  .guide-detail {
+    background: var(--surface);
+    border: 1px solid rgba(245,166,35,.15);
+    border-radius: 20px;
+    padding: 60px 40px;
+    margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 48px;
+    align-items: start;
+    scroll-margin-top: 80px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 720px) {
+    /* Nav */
+    nav { padding: 12px 16px; }
+    .nav-logo { font-size: 1.1rem; }
+    .nav-links { gap: 10px; }
+    .nav-links a { font-size: .75rem; }
+    .nav-cafe { padding: 6px 10px; font-size: .72rem; }
+
+    /* Hero */
+    .hero { padding: 80px 16px 60px; min-height: 100svh; }
+    .hero-stats { gap: 20px; margin-top: 36px; }
+    .stat-num { font-size: 2rem; }
+
+    /* Section */
+    .section { padding: 48px 16px; }
+    .section-title { font-size: 1.8rem; }
+
+    /* Cards grid: 1 column on phones */
+    .guides-grid { grid-template-columns: 1fr; gap: 20px; }
+
+    /* Detail sections */
+    .guide-detail {
+      grid-template-columns: 1fr;
+      padding: 28px 16px;
+      gap: 24px;
+    }
+    /* Hide cover image on mobile to save space */
+    .detail-cover { display: none; }
+
+    /* Donation section */
+    .donation-inner { padding: 60px 16px; }
+    .donation-h1 { font-size: 2.4rem; }
+    .donation-story { font-size: .95rem; }
+    .donation-quote { font-size: .88rem; padding: 10px 14px; }
+    .donation-impact { flex-direction: column; align-items: center; gap: 0; }
+    .impact-item { width: 100%; border-radius: 0 !important; border-left: 1px solid rgba(245,166,35,.12) !important; }
+    .impact-item:first-child { border-radius: 12px 12px 0 0 !important; }
+    .impact-item:last-child  { border-radius: 0 0 12px 12px !important; }
+    .cafe-btn { padding: 18px 28px; font-size: 1.05rem; }
+
+    /* Footer */
+    footer { padding: 28px 16px; font-size: .78rem; }
+  }
+
+  @media (max-width: 400px) {
+    .hero h1 { font-size: 3rem; }
+    .donation-h1 { font-size: 2rem; }
+    .cafe-btn { padding: 16px 20px; font-size: .95rem; }
+    .nav-links { gap: 6px; }
+  }
+
+  .detail-cover {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  }
+  .detail-cover img { width: 100%; display: block; }
+
+  .detail-tag {
+    display: inline-block;
+    background: var(--red-tag);
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  .detail-body h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; line-height: 1.2; margin-bottom: 14px; }
+  .detail-body > p { color: #aaa8a2; line-height: 1.75; margin-bottom: 24px; font-size: .97rem; }
+
+  .detail-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .detail-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: .93rem; color: #c8c5bf;
+  }
+  .detail-features li .chk {
+    width: 22px; height: 22px; min-width: 22px;
+    background: rgba(245,166,35,.15);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: .85rem; font-weight: 800;
+  }
+
+  .detail-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .2s, transform .2s;
+  }
+  .detail-cta:hover { background: var(--gold-dark); transform: translateY(-2px); }
+
+  .detail-note { margin-top: 12px; font-size: .8rem; color: var(--muted); font-style: italic; }
+
+  /* ── CAFE ── */
+  .cafe-section {
+    background: var(--surface2);
+    border-top: 1px solid rgba(245,166,35,.1);
+    border-bottom: 1px solid rgba(245,166,35,.1);
+    text-align: center;
+    padding: 60px 24px;
+  }
+
+  .cafe-section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 12px; }
+  .cafe-section p { color: #aaa8a2; max-width: 500px; margin: 0 auto 28px; line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--muted);
+    font-size: .85rem;
+    border-top: 1px solid rgba(255,255,255,.05);
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background: rgba(13,13,15,.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(245,166,35,.08);
+  }
+
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--gold); letter-spacing: .1em; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { color: #aaa; text-decoration: none; font-size: .85rem; font-weight: 700; transition: color .2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cafe {
+    background: linear-gradient(135deg, #F5A623, #e8521a);
+    color: #000 !important;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    transition: transform .2s, box-shadow .2s !important;
+    box-shadow: 0 0 0 0 rgba(245,166,35,0);
+  }
+  .nav-cafe:hover {
+    color: #000 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 18px rgba(245,166,35,.5) !important;
+  }
+
+  @media (max-width: 600px) { .nav-links { display: none; } }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    color: var(--muted);
+    font-size: .75rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+    z-index: 2;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(8px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Bienestar Digital</div>
+  <div class="nav-links">
+    <a href="#guias">Guías Gratis</a>
+    <a href="https://isaacpazebook.com" target="_blank" class="nav-cafe">⭐ COMUNIDAD</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-badge">💛 Recursos Gratuitos</div>
+  <h1>BIENESTAR<br><span>DIGITAL</span></h1>
+  <p class="hero-sub">Recursos gratuitos de salud para la comunidad latina. Información que puede cambiar — o salvar — una vida.</p>
+  <a href="#guias" class="btn-primary">📚 Ver Guías Gratis</a>
+  <a href="premium.html" class="btn-premium" onclick="openPremium(event)">⭐ PREMIUM</a>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Guías Gratuitas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">1/3</div>
+      <div class="stat-label">Adultos con Prediabetes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">1/2</div>
+      <div class="stat-label">Latinos en riesgo</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">↓ &nbsp; Explorar</div>
+</section>
+
+<!-- DONATION SECTION -->
+<style>
+  .donation-wrap {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+  .donation-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(230,88,26,.18) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 30%, rgba(245,166,35,.14) 0%, transparent 55%),
+                #0a0a0c;
+    z-index: 0;
+  }
+  .donation-particles {
+    position: absolute; inset: 0; z-index: 0;
+    overflow: hidden;
+  }
+  .dp {
+    position: absolute;
+    border-radius: 50%;
+    opacity: .18;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+    10%  { opacity: .18; }
+    90%  { opacity: .18; }
+    100% { transform: translateY(-120px) scale(1); opacity: 0; }
+  }
+  .donation-inner {
+    position: relative; z-index: 2;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 90px 24px;
+    text-align: center;
+  }
+  .donation-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #e8521a;
+    margin-bottom: 24px;
+    padding: 6px 16px;
+    border: 1px solid rgba(232,82,26,.3);
+    border-radius: 999px;
+    background: rgba(232,82,26,.08);
+  }
+  .donation-h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    line-height: .95;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .donation-h1 .hl {
+    background: linear-gradient(135deg, #F5A623, #e8521a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .donation-story {
+    font-size: 1.05rem;
+    color: #b0ada4;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 16px;
+  }
+  .donation-story strong { color: #f0eee8; font-weight: 800; }
+  .donation-quote {
+    border-left: 3px solid var(--gold);
+    padding: 12px 20px;
+    margin: 28px auto;
+    max-width: 520px;
+    text-align: left;
+    color: #d4d0c8;
+    font-style: italic;
+    font-size: .95rem;
+    line-height: 1.7;
+    background: rgba(245,166,35,.05);
+    border-radius: 0 8px 8px 0;
+  }
+  .donation-impact {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 36px 0;
+    flex-wrap: wrap;
+  }
+  .impact-item {
+    padding: 20px 28px;
+    border: 1px solid rgba(245,166,35,.12);
+    background: rgba(255,255,255,.03);
+    text-align: center;
+    position: relative;
+  }
+  .impact-item:first-child { border-radius: 12px 0 0 12px; }
+  .impact-item:last-child  { border-radius: 0 12px 12px 0; }
+  .impact-item + .impact-item { border-left: none; }
+  .impact-emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  .impact-label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .impact-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--gold); display: block; }
+  .cafe-btn-wrap {
+    margin: 40px 0 16px;
+    position: relative;
+    display: inline-block;
+  }
+  .cafe-btn-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #F5A623, #e8521a, #F5A623);
+    background-size: 200%;
+    animation: glowShift 3s ease infinite, pulse 2s ease infinite;
+    filter: blur(16px);
+    opacity: .6;
+    z-index: 0;
+  }
+  @keyframes glowShift { 0%,100%{background-position:0%} 50%{background-position:100%} }
+  @keyframes pulse { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:.8;transform:scale(1.04)} }
+  .cafe-btn {
+    position: relative; z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #F5A623 0%, #e8521a 100%);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    padding: 20px 48px;
+    border-radius: 14px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 8px 32px rgba(232,82,26,.4);
+    letter-spacing: .01em;
+  }
+  .cafe-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 16px 48px rgba(232,82,26,.55);
+  }
+  .cafe-btn .cafe-icon {
+    font-size: 1.6rem;
+    animation: steam 2.5s ease infinite;
+    display: inline-block;
+  }
+  @keyframes steam {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50%      { transform: translateY(-4px) rotate(5deg); }
+  }
+  .cafe-btn-sub {
+    display: block;
+    font-size: .72rem;
+    font-weight: 600;
+    opacity: .85;
+    margin-top: 2px;
+    letter-spacing: .05em;
+  }
+  .donation-micro {
+    font-size: .82rem;
+    color: #666;
+    margin-top: 6px;
+  }
+  .donation-micro span { color: #2ecc71; font-weight: 700; }
+  .donation-hearts {
+    font-size: 1.4rem;
+    margin-top: 32px;
+    opacity: .5;
+    letter-spacing: 4px;
+  }
+</style>
+
+<div class="donation-wrap" id="cafe">
+  <div class="donation-bg"></div>
+  <div class="donation-particles" id="particles"></div>
+  <div class="donation-inner">
+    <div class="donation-eyebrow">❤️ &nbsp; Para la comunidad latina</div>
+    <h2 class="donation-h1">
+      Este contenido<br>
+      <span class="hl">te llegó gratis.</span><br>
+      ¿Y si le llega a más?
+    </h2>
+    <p class="donation-story">
+      Cada guía que descargaste tomó horas de investigación, diseño y amor.
+      <strong>No hay publicidad. No hay patrocinadores. No hay precio.</strong><br>
+      Solo una persona que cree que la salud no debería tener barreras para nuestra comunidad.
+    </p>
+    <div class="donation-quote">
+      "Quizás este contenido llegó en el momento justo. Quizás le hablas de él a tu mamá, a tu tía, a tu vecino.
+      Si fue así, sería un honor que me ayudaras a que llegue a miles más."
+    </div>
+    <div class="donation-impact">
+      <div class="impact-item">
+        <span class="impact-emoji">☕</span>
+        <span class="impact-val">1 café</span>
+        <span class="impact-label">lo que tú decidas</span>
+      </div>
+      <div class="impact-item">
+        <span class="impact-emoji">📚</span>
+        <span class="impact-val">nueva guía</span>
+        <span class="impact-label">para la comunidad</span>
+      </div>
+      <div class="impact-item">
+        <span class="impact-emoji">💛</span>
+        <span class="impact-val">miles</span>
+        <span class="impact-label">de familias beneficiadas</span>
+      </div>
+    </div>
+    <div class="cafe-btn-wrap">
+      <div class="cafe-btn-glow"></div>
+      <a href="https://www.paypal.com/donate/?hosted_button_id=3AFHFQQSM45CE" target="_blank" class="cafe-btn">
+        <span class="cafe-icon">☕</span>
+        <span>
+          Regálame un café
+          <span class="cafe-btn-sub">Cualquier cantidad · Totalmente voluntario</span>
+        </span>
+      </a>
+    </div>
+    <p class="donation-micro">
+      100% va a crear más contenido gratuito · <span>Sin obligación</span> · Pago seguro
+    </p>
+    <div class="donation-hearts">❤️ ❤️ ❤️</div>
+  </div>
+</div>
+
+<script>
+  const container = document.getElementById('particles');
+  const colors = ['#F5A623','#e8521a','#fff'];
+  for (let i = 0; i < 18; i++) {
+    const dp = document.createElement('div');
+    dp.className = 'dp';
+    const size = Math.random() * 10 + 4;
+    dp.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${Math.random()*8+6}s;
+      animation-delay:${Math.random()*8}s;
+    `;
+    container.appendChild(dp);
+  }
+</script>
+
+<!-- CARDS OVERVIEW -->
+<div style="background: var(--surface2); border-top: 1px solid rgba(245,166,35,.08); border-bottom: 1px solid rgba(245,166,35,.08);">
+<div class="section" id="guias">
+  <h2 class="section-title">📚 Guías Disponibles</h2>
+  <p class="section-sub">Toca una imagen para ver la descripción y descargarla gratis.</p>
+
+  <div class="photo-grid">
+
+    <a href="#detalle-prediabetes" class="photo-card reveal">
+      <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80" alt="Prediabetes">
+      <span class="card-tag">Prediabetes</span>
+      <div class="photo-card-name">10 Señales de Prediabetes Que Estás Ignorando</div>
+    </a>
+
+    <a href="#detalle-glucosa" class="photo-card reveal">
+      <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80" alt="Plan 7 días">
+      <span class="card-tag">Alimentación</span>
+      <div class="photo-card-name">Plan de 7 Días para Controlar tu Glucosa</div>
+    </a>
+
+    <a href="#detalle-habitos" class="photo-card reveal">
+      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80" alt="5 hábitos">
+      <span class="card-tag">Salud Metabólica</span>
+      <div class="photo-card-name">Los 5 Hábitos Fundamentales para Controlar tu Glucosa</div>
+    </a>
+
+    <a href="#detalle-dental" class="photo-card reveal">
+      <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&q=80" alt="Salud dental">
+      <span class="card-tag">Prevención</span>
+      <div class="photo-card-name">Diabetes y Salud Dental – Guía Completa</div>
+    </a>
+
+    <a href="#detalle-snacks" class="photo-card reveal">
+      <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80" alt="Snacks">
+      <span class="card-tag">Nutrición</span>
+      <div class="photo-card-name">Snacks Inteligentes – Calma el antojo sin subir tu azúcar</div>
+    </a>
+
+  </div>
+</div>
+</div>
+
+<!-- DETAIL SECTIONS -->
+<div class="section" style="max-width:1100px;">
+
+  <!-- DETAIL 1 -->
+  <div class="guide-detail reveal" id="detalle-prediabetes">
+    <div class="detail-cover">
+      <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=80" alt="Prediabetes">
+    </div>
+    <div class="detail-body">
+      <span class="detail-tag">Prediabetes</span>
+      <h2>10 Señales de Prediabetes Que Estás Ignorando</h2>
+      <p>¿Sabías que 1 de cada 3 adultos tiene prediabetes y el 80% ni siquiera lo sabe? Esta guía práctica te muestra las 10 señales físicas que tu cuerpo ya está enviando — y que probablemente estás ignorando. Descubre tu nivel de riesgo ANTES de que sea demasiado tarde. La prediabetes es reversible. La diabetes tipo 2... ya no.</p>
+      <p style="color:var(--gold); font-style:italic; margin-bottom:24px; font-size:.9rem;">⚡ "La genética carga el arma, pero el estilo de vida aprieta el gatillo"</p>
+      <ul class="detail-features">
+        <li><span class="chk">✓</span> Checklist de autoevaluación de riesgo</li>
+        <li><span class="chk">✓</span> Las 10 señales explicadas con ciencia real</li>
+        <li><span class="chk">✓</span> Sistema de puntuación: riesgo Bajo, Moderado o Alto</li>
+        <li><span class="chk">✓</span> Pasos inmediatos para revertir la condición</li>
+      </ul>
+      <a href="https://drive.google.com/file/d/1R0n0Nc2HCX47f2c7OQgjcZiOMQWBNooz/view?usp=drive_link" target="_blank" class="detail-cta">☕ Descargar Gratis</a>
+      <p class="detail-note">Sin registro requerido · Descarga inmediata</p>
+    </div>
+  </div>
+
+  <!-- DETAIL 2 -->
+  <div class="guide-detail reveal" id="detalle-glucosa">
+    <div class="detail-cover">
+      <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=700&q=80" alt="Plan 7 días">
+    </div>
+    <div class="detail-body">
+      <span class="detail-tag">Alimentación</span>
+      <h2>Plan de 7 Días para Controlar tu Glucosa</h2>
+      <p>Un workbook práctico para personas con diabetes y sus familias. Come bien con alimentos de cualquier supermercado, sin gastar de más y sin cocinar por separado. Incluye plan día por día, lista de compras y registro de glucosa.</p>
+      <p style="color:var(--gold); font-style:italic; margin-bottom:24px; font-size:.9rem;">💛 "No se trata de perfección, sino de progreso."</p>
+      <ul class="detail-features">
+        <li><span class="chk">✓</span> Plan de comidas completo por 7 días</li>
+        <li><span class="chk">✓</span> Lista de compras semanal incluida</li>
+        <li><span class="chk">✓</span> Control de porciones con el método de la mano — sin báscula</li>
+        <li><span class="chk">✓</span> Señales de alerta de hipoglucemia e hiperglucemia explicadas</li>
+      </ul>
+      <a href="https://drive.google.com/file/d/1bhpZDZvcF_MRfbOXJ8eWOKSUPO98Fq6y/view?usp=drive_link" target="_blank" class="detail-cta">☕ Descargar Gratis</a>
+      <p class="detail-note">Sin registro requerido · Descarga inmediata</p>
+    </div>
+  </div>
+
+  <!-- DETAIL 3 -->
+  <div class="guide-detail reveal" id="detalle-habitos">
+    <div class="detail-cover">
+      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80" alt="5 hábitos">
+    </div>
+    <div class="detail-body">
+      <span class="detail-tag">Salud Metabólica</span>
+      <h2>Los 5 Hábitos Fundamentales para Controlar tu Glucosa</h2>
+      <p>Guía de 22 páginas basada en evidencia científica (OMS, ADA, CDC). 1 de cada 2 latinos desarrollará diabetes tipo 2 en su vida. Pero puedes cambiarlo — sin dietas extremas, sin prohibiciones. Solo 5 hábitos reales que funcionan.</p>
+      <p style="color:var(--gold); font-style:italic; margin-bottom:24px; font-size:.9rem;">💛 "El cambio no viene de la fuerza de voluntad, sino de entender por qué tu cuerpo reacciona como lo hace."</p>
+      <ul class="detail-features">
+        <li><span class="chk">✓</span> Alimentación inteligente sin restricciones extremas</li>
+        <li><span class="chk">✓</span> Movimiento cotidiano que reduce picos de glucosa hasta 37%</li>
+        <li><span class="chk">✓</span> Sueño y estrés: los factores ocultos que suben tu azúcar</li>
+        <li><span class="chk">✓</span> Protocolo de monitoreo semanal paso a paso</li>
+      </ul>
+      <a href="https://drive.google.com/file/d/1IOEyuId8RK-EbYDTusze7lxO_jk1uQj1/view?usp=drive_link" target="_blank" class="detail-cta">☕ Descargar Gratis</a>
+      <p class="detail-note">22 páginas · Basado en evidencia científica</p>
+    </div>
+  </div>
+
+  <!-- DETAIL 4 -->
+  <div class="guide-detail reveal" id="detalle-dental">
+    <div class="detail-cover">
+      <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=700&q=80" alt="Salud dental">
+    </div>
+    <div class="detail-body">
+      <span class="detail-tag">Prevención</span>
+      <h2>Diabetes y Salud Dental – Guía Completa de Cuidado y Prevención</h2>
+      <p>Lo que nadie te conecta: tus problemas dentales pueden subir tu glucosa hasta un 40%. Y viceversa. Las personas con diabetes tienen 3 veces más riesgo de enfermedad en las encías. Esta guía te enseña a romper ese ciclo y proteger tu sonrisa mientras controlas tu diabetes.</p>
+      <ul class="detail-features">
+        <li><span class="chk">✓</span> La conexión científica entre encías y glucosa explicada claramente</li>
+        <li><span class="chk">✓</span> Señales de alerta dental que debes conocer hoy</li>
+        <li><span class="chk">✓</span> Rutina de cuidado bucal diario para diabéticos</li>
+        <li><span class="chk">✓</span> El tratamiento dental correcto puede reducir tu HbA1c entre 0.4% y 0.7%</li>
+      </ul>
+      <a href="https://drive.google.com/file/d/17rIllLfWb9OuU-49ueAOdNhi80wkV_YT/view?usp=drive_link" target="_blank" class="detail-cta">☕ Descargar Gratis</a>
+      <p class="detail-note">Sin registro requerido · Descarga inmediata</p>
+    </div>
+  </div>
+
+  <!-- DETAIL 5 -->
+  <div class="guide-detail reveal" id="detalle-snacks">
+    <div class="detail-cover">
+      <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=700&q=80" alt="Snacks">
+    </div>
+    <div class="detail-body">
+      <span class="detail-tag">Nutrición</span>
+      <h2>Snacks Inteligentes – Calma el antojo sin subir tu azúcar</h2>
+      <p>¿Sientes antojos irresistibles de dulce? Tu glucosa está subiendo y bajando en montaña rusa. Esta guía te da la fórmula comprobada: Fibra + Proteína = Control de Glucosa. Opciones deliciosas desde $0.50 USD que pueden ahorrarte hasta $100 al mes.</p>
+      <p style="color:var(--gold); font-style:italic; margin-bottom:24px; font-size:.9rem;">💛 La canela sola mejora la sensibilidad a la insulina hasta un 29%.</p>
+      <ul class="detail-features">
+        <li><span class="chk">✓</span> Sistema semáforo: snacks verdes, amarillos y rojos</li>
+        <li><span class="chk">✓</span> Recetas dulces y saladas económicas y fáciles</li>
+        <li><span class="chk">✓</span> Bebidas inteligentes que reducen picos de glucosa 20%</li>
+        <li><span class="chk">✓</span> Guía de compra inteligente para ahorrar cada semana</li>
+      </ul>
+      <a href="https://drive.google.com/file/d/1KIMqw_6Nus8s0gTOyLgTUe25s3cRQy2/view?usp=drive_link" target="_blank" class="detail-cta">☕ Descargar Gratis</a>
+      <p class="detail-note">Opciones desde $0.50 · Fácil y económico</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Bienestar Digital © 2025 · <a href="https://isaacpazebook.com" target="_blank">isaacpazebook.com</a> · Hecho con ❤️ para la comunidad latina</p>
+  <p style="margin-top:8px; font-size:.78rem;">Este contenido es educativo e informativo. No reemplaza el consejo médico profesional.</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+<!-- PREMIUM CONSTRUCTION MODAL -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closePremium()">✕</button>
+    <span class="modal-icon">⚙️</span>
+    <div class="modal-tag">🚧 En Construcción</div>
+    <h2 class="modal-h">Algo <span>grande</span><br>está llegando</h2>
+    <p class="modal-p">
+      Estamos construyendo algo especial para ti.<br>
+      <strong>El acceso PREMIUM de Bienestar Digital</strong> traerá contenido exclusivo, guías avanzadas y herramientas para transformar tu salud de verdad.
+    </p>
+
+    <ul class="modal-features">
+      <li><span class="dot"></span> Guías avanzadas con planes personalizados</li>
+      <li><span class="dot"></span> Acceso a comunidad privada de apoyo</li>
+      <li><span class="dot"></span> Webinars mensuales con expertos en salud</li>
+      <li><span class="dot"></span> Herramientas interactivas de seguimiento</li>
+      <li><span class="dot"></span> Contenido nuevo cada semana</li>
+    </ul>
+
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-label">En desarrollo... pronto disponible</div>
+
+    <div class="modal-coming">Regresa pronto — <span>lo mejor está por venir</span> ❤️</div>
+  </div>
+</div>
+
+<script>
+  function openPremium(e) {
+    e.preventDefault();
+    document.getElementById('premiumModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePremium() {
+    document.getElementById('premiumModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('premiumModal').addEventListener('click', function(e) {
+    if (e.target === this) closePremium();
+  });
+</script>
+
+</body>
+</html>
